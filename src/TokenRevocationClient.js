@@ -4,18 +4,19 @@
 import Log from './Log';
 import MetadataService from './MetadataService';
 import Global from './Global';
+require('es6-promise').polyfill();
+//require('isomorphic-fetch');
 
 const AccessTokenTypeHint = "access_token";
 
 export default class TokenRevocationClient {
-    constructor(settings, XMLHttpRequestCtor = Global.XMLHttpRequest, MetadataServiceCtor = MetadataService) {
+    constructor(settings, MetadataServiceCtor = MetadataService) {
         if (!settings) {
             Log.error("No settings provided");
             throw new Error("No settings provided.");
         }
         
         this._settings = settings;
-        this._XMLHttpRequestCtor = XMLHttpRequestCtor;
         this._metadataService = new MetadataServiceCtor(this._settings);
     }
 
@@ -47,31 +48,39 @@ export default class TokenRevocationClient {
     _revoke(url, client_id, client_secret, accessToken) {
         Log.info("Calling revocation endpoint");
 
-        return new Promise((resolve, reject) => {
+        var body = "client_id=" + encodeURIComponent(client_id); 
+        if (client_secret) {
+            body += "&client_secret=" + encodeURIComponent(client_secret);
+        }
+        body += "&token_type_hint=" + encodeURIComponent(AccessTokenTypeHint);
+        body += "&token=" + encodeURIComponent(accessToken);
 
-            var xhr = new this._XMLHttpRequestCtor();
-            xhr.open("POST", url);
-            
-            xhr.onload = () => {
-                Log.info("HTTP response received, status", xhr.status);
-                
-                if (xhr.status === 200) {
-                    resolve();
-                }
-                else {
-                    reject(Error(xhr.statusText + " (" + xhr.status + ")"));
-                }
-            };
+        let settings = {  
+            method: 'post',
+            mode: 'cors',
+            // credentials: 'include',
+            headers: {  
+                "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"  
+            },  
+            body: body
+        };
 
-            var body = "client_id=" + encodeURIComponent(client_id); 
-            if (client_secret) {
-                body += "&client_secret=" + encodeURIComponent(client_secret);
-            }
-            body += "&token_type_hint=" + encodeURIComponent(AccessTokenTypeHint);
-            body += "&token=" + encodeURIComponent(accessToken);
-            
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.send(body);
-        });
+        return fetch(url, settings)
+            .then(this.status)
+            .catch(this.onerror);
+    }
+
+    status(response) {
+        Log.info("HTTP response received, status", response.status);
+        if (response.status === 200) {  
+            return Promise.resolve();
+        } else {  
+            return Promise.reject(Error(response.statusText + " (" + response.status + ")"));
+        }  
+    }
+    
+    onerror(error) {
+        Log.error("network error");
+        return Promise.reject(Error("Network Error: '" + error + '"'));
     }
 }

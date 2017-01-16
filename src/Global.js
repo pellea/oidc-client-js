@@ -33,11 +33,6 @@ export default class Global {
             return sessionStorage;
         }
     }
-    static get XMLHttpRequest() {
-        if (!testing) {
-            return XMLHttpRequest;
-        }
-    }
     static get timer() {
         if (!testing) {
             return timer;

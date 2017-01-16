@@ -45,6 +45,8 @@
     "webpack-stream": "^3.2.0"
   },
   "dependencies": {
+    "es6-promise": "^4.0.5",
+    "isomorphic-fetch": "^2.2.1",
     "jsrsasign": "^5.0.7"
   },
   "peerDependencies": {
