@@ -1,4 +1,4 @@
-declare module "oidc-client" {
+declare module "oidc-client-fetch" {
     export = Oidc;
 }
 declare namespace Oidc {
