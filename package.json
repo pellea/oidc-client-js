@@ -1,7 +1,7 @@
 {
-  "name": "oidc-client",
+  "name": "oidc-client-fetch",
   "version": "1.2.2",
-  "description": "OpenID Connect (OIDC) & OAuth2 client library",
+  "description": "OpenID Connect (OIDC) & OAuth2 client library (uses isomorphic-fetch)",
   "main": "lib/oidc-client.min.js",
   "scripts": {
     "build": "gulp build",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/IdentityModel/oidc-client-js.git"
+    "url": "https://github.com/pellea/oidc-client-js.git"
   },
   "author": "Brock Allen & Dominick Baier",
   "contributors": [
@@ -21,13 +21,17 @@
     {
       "name": "Dominick Baier",
       "email": "dbaier@leastprivilege.com"
+    },
+    {
+      "name": "Adrien Pellegrini",
+      "email": "adrien.pellegrini@gmail.com"
     }
   ],
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/IdentityModel/oidc-client-js/issues"
+    "url": "https://github.com/pellea/oidc-client-js/issues"
   },
-  "homepage": "https://github.com/IdentityModel/oidc-client-js",
+  "homepage": "https://github.com/pellea/oidc-client-js",
   "devDependencies": {
     "babel-core": "^6.7.2",
     "babel-loader": "^6.2.4",
